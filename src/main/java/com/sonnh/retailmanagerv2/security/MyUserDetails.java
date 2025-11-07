@@ -12,13 +12,13 @@ import java.util.Collections;
 @AllArgsConstructor
 @Getter
 public class MyUserDetails implements UserDetails {
-   private Account user;
+    private Account user;
 
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(user.getRole().getName()));
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_"  + user.getRole().getName()));
     }
 
     @Override
@@ -38,7 +38,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return user.getAudit().getIsActive();
     }
 
     @Override
