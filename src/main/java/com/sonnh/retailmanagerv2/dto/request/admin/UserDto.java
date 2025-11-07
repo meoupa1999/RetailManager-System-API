@@ -1,2 +1,12 @@
-package com.sonnh.retailmanagerv2.dto.request.admin;public class UserDto {
+package com.sonnh.retailmanagerv2.dto.request.admin;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.io.Serializable;
+@Data
+@AllArgsConstructor
+public class UserDto implements Serializable {
+    private String username;
+    private String password;
 }
