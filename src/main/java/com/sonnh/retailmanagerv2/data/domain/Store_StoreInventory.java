@@ -36,6 +36,14 @@ public class Store_StoreInventory {
     @OneToMany(mappedBy = "storeStoreInventory")
     private List<StoreImportDetail> storeImportDetailList = new ArrayList();
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "promotion_store_storeinventory",
+            joinColumns = @JoinColumn(name = "promotion_id"),
+            inverseJoinColumns = @JoinColumn(name = "store_storeinventory_id")
+    )
+    private List<Promotion> promotionList = new ArrayList<>();
     public void addStore(Store store) {
         store.getStoreStoreInventoryList().add(this);
         this.setStore(store);

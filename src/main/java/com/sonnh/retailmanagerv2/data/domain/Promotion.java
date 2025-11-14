@@ -36,6 +36,6 @@ public class Promotion {
     private Audit audit = new Audit();
 
     @ManyToMany(mappedBy = "promotionList")
-    private List<StoreInventory> storeInventoryList = new ArrayList<>();
+    private List<Store_StoreInventory> store_storeInventoryList = new ArrayList<>();
 
 }

@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,13 +36,11 @@ public class StoreInventory {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-    @ManyToMany
-    @JoinTable(name = "storeinventory_promotion",
-            joinColumns = {@JoinColumn(name = "storeinventory_id")},
-            inverseJoinColumns = {@JoinColumn(name = "promotion_id")})
-    private List<Promotion> promotionList = new ArrayList();
+
+
     @OneToMany(mappedBy = "product")
     private List<Guaranted> guarantedList = new ArrayList();
+
 
     public void addCategory(Category category) {
         category.getStoreInventoryList().add(this);
