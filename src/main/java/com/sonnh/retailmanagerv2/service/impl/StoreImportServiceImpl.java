@@ -177,22 +177,22 @@ public class StoreImportServiceImpl implements StoreImportService {
                             ssi = ssiE;
                         //
                         // go block
-//                        if (importSummaryMap.containsKey(productId)) {
-//                           ImportStoreSummaryBussiness importStoreSummaryBussiness = importSummaryMap.get(productId);
-//                           importStoreSummaryBussiness.setTotalQuantityImport(importStoreSummaryBussiness.getTotalQuantityImport() + warehouseMap.get(warehouseId).get(productId));
-//                           importStoreSummaryBussiness.setQuantityStoreAfter(importStoreSummaryBussiness.getQuantityStoreAfter() + warehouseMap.get(warehouseId).get(productId));
-//                           importSummaryMap.put(productId,importStoreSummaryBussiness);
-//                        }else {
-//                            ImportStoreSummaryBussiness importStoreSummaryBussiness = new ImportStoreSummaryBussiness();
-//                            importStoreSummaryBussiness.setQuantityStoreBefore(ssi.getQuantity());
-//                            importStoreSummaryBussiness.setTotalQuantityImport(warehouseMap.get(warehouseId).get(productId));
-//                            importStoreSummaryBussiness.setProductId(productId);
-//                            importStoreSummaryBussiness.setProductCode(productWarehouse.getProductCode());
-//                            importStoreSummaryBussiness.setProductName(productWarehouse.getName());
-//                            importStoreSummaryBussiness.setQuantityStoreAfter(ssi.getQuantity() + warehouseMap.get(warehouseId).get(productId));
-//                            importStoreSummaryBussiness.getStoreImportDetailList().add(storeImportDetail);
-//                            importSummaryMap.put(productId,importStoreSummaryBussiness);
-//                        }
+                        if (importSummaryMap.containsKey(productId)) {
+                           ImportStoreSummaryBussiness importStoreSummaryBussiness = importSummaryMap.get(productId);
+                           importStoreSummaryBussiness.setTotalQuantityImport(importStoreSummaryBussiness.getTotalQuantityImport() + warehouseMap.get(warehouseId).get(productId));
+                           importStoreSummaryBussiness.setQuantityStoreAfter(importStoreSummaryBussiness.getQuantityStoreAfter() + warehouseMap.get(warehouseId).get(productId));
+                           importSummaryMap.put(productId,importStoreSummaryBussiness);
+                        }else {
+                            ImportStoreSummaryBussiness importStoreSummaryBussiness = new ImportStoreSummaryBussiness();
+                            importStoreSummaryBussiness.setQuantityStoreBefore(ssi.getQuantity());
+                            importStoreSummaryBussiness.setTotalQuantityImport(warehouseMap.get(warehouseId).get(productId));
+                            importStoreSummaryBussiness.setProductId(productId);
+                            importStoreSummaryBussiness.setProductCode(productWarehouse.getProductCode());
+                            importStoreSummaryBussiness.setProductName(productWarehouse.getName());
+                            importStoreSummaryBussiness.setQuantityStoreAfter(ssi.getQuantity() + warehouseMap.get(warehouseId).get(productId));
+                            importStoreSummaryBussiness.getStoreImportDetailList().add(storeImportDetail);
+                            importSummaryMap.put(productId,importStoreSummaryBussiness);
+                        }
 
                         //
                         Long quantityWarehouseBefore = wwi.getQuantity();
@@ -235,22 +235,22 @@ public class StoreImportServiceImpl implements StoreImportService {
                         System.out.println("save ssi thanh cong");
                         //
                         //go block
-//                        if (importSummaryMap.containsKey(productId)) {
-//                            ImportStoreSummaryBussiness importStoreSummaryBussiness = importSummaryMap.get(productId);
-//                            importStoreSummaryBussiness.setTotalQuantityImport(importStoreSummaryBussiness.getTotalQuantityImport() + warehouseMap.get(warehouseId).get(productId));
-//                            importStoreSummaryBussiness.setQuantityStoreAfter(importStoreSummaryBussiness.getQuantityStoreAfter() + warehouseMap.get(warehouseId).get(productId));
-//                            importSummaryMap.put(productId,importStoreSummaryBussiness);
-//                        }else {
-//                            ImportStoreSummaryBussiness importStoreSummaryBussiness = new ImportStoreSummaryBussiness();
-//                            importStoreSummaryBussiness.setQuantityStoreBefore(ssi.getQuantity());
-//                            importStoreSummaryBussiness.setTotalQuantityImport(warehouseMap.get(warehouseId).get(productId));
-//                            importStoreSummaryBussiness.setProductId(productId);
-//                            importStoreSummaryBussiness.setProductCode(productWarehouse.getProductCode());
-//                            importStoreSummaryBussiness.setProductName(productWarehouse.getName());
-//                            importStoreSummaryBussiness.setQuantityStoreAfter(ssi.getQuantity() + warehouseMap.get(warehouseId).get(productId));
-//                            importStoreSummaryBussiness.getStoreImportDetailList().add(storeImportDetail);
-//                            importSummaryMap.put(productId,importStoreSummaryBussiness);
-//                        }
+                        if (importSummaryMap.containsKey(productId)) {
+                            ImportStoreSummaryBussiness importStoreSummaryBussiness = importSummaryMap.get(productId);
+                            importStoreSummaryBussiness.setTotalQuantityImport(importStoreSummaryBussiness.getTotalQuantityImport() + warehouseMap.get(warehouseId).get(productId));
+                            importStoreSummaryBussiness.setQuantityStoreAfter(importStoreSummaryBussiness.getQuantityStoreAfter() + warehouseMap.get(warehouseId).get(productId));
+                            importSummaryMap.put(productId,importStoreSummaryBussiness);
+                        }else {
+                            ImportStoreSummaryBussiness importStoreSummaryBussiness = new ImportStoreSummaryBussiness();
+                            importStoreSummaryBussiness.setQuantityStoreBefore(ssi.getQuantity());
+                            importStoreSummaryBussiness.setTotalQuantityImport(warehouseMap.get(warehouseId).get(productId));
+                            importStoreSummaryBussiness.setProductId(productId);
+                            importStoreSummaryBussiness.setProductCode(productWarehouse.getProductCode());
+                            importStoreSummaryBussiness.setProductName(productWarehouse.getName());
+                            importStoreSummaryBussiness.setQuantityStoreAfter(ssi.getQuantity() + warehouseMap.get(warehouseId).get(productId));
+                            importStoreSummaryBussiness.getStoreImportDetailList().add(storeImportDetail);
+                            importSummaryMap.put(productId,importStoreSummaryBussiness);
+                        }
                         //
                         Long quantityWarehouseBefore = wwi.getQuantity();
                         System.out.println("wwi: " + quantityWarehouseBefore);
@@ -275,23 +275,28 @@ public class StoreImportServiceImpl implements StoreImportService {
                         wwi.setQuantity(quantityWarehouseBefore - quantityImport);
                     }
                     //go block
-//                    for (UUID productIdOfImportSumMap:importSummaryMap.keySet()) {
-//                        ImportStoreSummary importStoreSummary = new ImportStoreSummary();
-//                        importStoreSummary.setProductId(importSummaryMap.get(productIdOfImportSumMap).getProductId());
-//                        importStoreSummary.setProductName(importSummaryMap.get(productIdOfImportSumMap).getProductName());
-//                        importStoreSummary.setProductCode(importSummaryMap.get(productIdOfImportSumMap).getProductCode());
-//                        importStoreSummary.setQuantityStoreBefore(importSummaryMap.get(productIdOfImportSumMap).getQuantityStoreBefore());
-//                        importStoreSummary.setTotalQuantityImport(importSummaryMap.get(productIdOfImportSumMap).getTotalQuantityImport());
-//                        importStoreSummary.setQuantityStoreAfter(importSummaryMap.get(productIdOfImportSumMap).getQuantityStoreAfter());
-//                        importStoreSummary.addStore(store);
-//                        importStoreSummary.addStoreImportDetails(importSummaryMap.get(productIdOfImportSumMap).getStoreImportDetailList());
-//                        importStoreSummaryRepository.save(importStoreSummary);
-//                    }
+
 
                     warehouseWarehouseInventoryRepository.save(wwi);
                     storeImportDetailRepository.save(storeImportDetail);
                 }
             }
+        }
+        for (UUID productIdOfImportSumMap:importSummaryMap.keySet()) {
+            System.out.println("Data can check");
+            System.out.println("productId: " + productIdOfImportSumMap + "| " + importSummaryMap.get(productIdOfImportSumMap).toString());
+            ImportStoreSummary importStoreSummary = new ImportStoreSummary();
+            importStoreSummary.setProductId(importSummaryMap.get(productIdOfImportSumMap).getProductId());
+            importStoreSummary.setProductName(importSummaryMap.get(productIdOfImportSumMap).getProductName());
+            importStoreSummary.setProductCode(importSummaryMap.get(productIdOfImportSumMap).getProductCode());
+            importStoreSummary.setQuantityStoreBefore(importSummaryMap.get(productIdOfImportSumMap).getQuantityStoreBefore());
+            importStoreSummary.setTotalQuantityImport(importSummaryMap.get(productIdOfImportSumMap).getTotalQuantityImport());
+            importStoreSummary.setQuantityStoreAfter(importSummaryMap.get(productIdOfImportSumMap).getQuantityStoreAfter());
+            importStoreSummary.setStoreImportId(storeImport.getId());
+            importStoreSummary.addStore(store);
+            importStoreSummary.addStoreImportDetails(importSummaryMap.get(productIdOfImportSumMap).getStoreImportDetailList());
+            importStoreSummaryRepository.save(importStoreSummary);
+            System.out.println("add " + productIdOfImportSumMap + " succesfully");
         }
         System.out.println("sucess nha chúc mừng !! ");
 
@@ -550,7 +555,7 @@ public class StoreImportServiceImpl implements StoreImportService {
         boolean warehouseFlag = false;
         boolean productFlag = false;
         Map<UUID, Map<UUID, Long>> warehouseMap = new HashMap<>();
-        Map<UUID, Long> productMap = new HashMap<>();
+        Map<UUID, Long> productMap = null;
         UUID warehouseId = null;
         UUID productId = null;
         Long quantity;
@@ -565,6 +570,7 @@ public class StoreImportServiceImpl implements StoreImportService {
                     }
                     if (c.getStringCellValue().equals("productflagopen")) {
                         productFlag = true;
+                        productMap = new HashMap<>();
                         continue;
                     }
                     if (c.getStringCellValue().equals("productflagclose")) {
@@ -579,6 +585,7 @@ public class StoreImportServiceImpl implements StoreImportService {
                         warehouseFlag = false;
                     }
                 if (productFlag) {
+
                     if (c.getColumnIndex() == 3 && c.getCellType().equals(CellType.STRING)) {
                         System.out.println("product id: " + c.getStringCellValue());
                         productId = UUID.fromString(c.getStringCellValue());
