@@ -40,8 +40,8 @@ public class Store_StoreInventory {
     @ManyToMany
     @JoinTable(
             name = "promotion_store_storeinventory",
-            joinColumns = @JoinColumn(name = "promotion_id"),
-            inverseJoinColumns = @JoinColumn(name = "store_storeinventory_id")
+            joinColumns = @JoinColumn(name = "store_storeinventory_id"),
+            inverseJoinColumns = @JoinColumn(name = "promotion_id")
     )
     private List<Promotion> promotionList = new ArrayList<>();
     public void addStore(Store store) {
@@ -52,5 +52,10 @@ public class Store_StoreInventory {
     public void addStoreInventory(StoreInventory storeInventory) {
         storeInventory.getStore_storeInventoryList().add(this);
         this.setStoreInventory(storeInventory);
+    }
+
+    public void addPromotion(Promotion promotion) {
+        promotion.getStore_storeInventoryList().add(this);
+        this.getPromotionList().add(promotion);
     }
 }

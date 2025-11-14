@@ -27,6 +27,7 @@ public class Promotion {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(nullable = false, columnDefinition = "uniqueIdentifier")
     private UUID id;
+    private String name;
     private Double discountPercent;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -37,5 +38,6 @@ public class Promotion {
 
     @ManyToMany(mappedBy = "promotionList")
     private List<Store_StoreInventory> store_storeInventoryList = new ArrayList<>();
+
 
 }
