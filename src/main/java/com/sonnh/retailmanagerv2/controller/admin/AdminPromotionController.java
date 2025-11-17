@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sonnh.retailmanagerv2.dto.request.admin.PromotionCreateReqDto;
 import com.sonnh.retailmanagerv2.dto.request.admin.StoreCreateReqDto;
+import com.sonnh.retailmanagerv2.dto.response.PageImplResDto;
+import com.sonnh.retailmanagerv2.dto.response.admin.StoreByProductResDto;
+import com.sonnh.retailmanagerv2.dto.response.admin.StoreResDto;
 import com.sonnh.retailmanagerv2.service.interfaces.PromotionService;
 import com.sonnh.retailmanagerv2.service.interfaces.StoreService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,10 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -48,3 +48,14 @@ public class AdminPromotionController {
         }
     }
 
+    @GetMapping({"/getStoresByProductId"})
+    public ResponseEntity<PageImplResDto<StoreByProductResDto>> getStoresByProductId(@RequestParam(required = true) UUID productId,
+                                                                                     @RequestParam(required = false) String address,
+                                                                                     @RequestParam(required = false) String name,
+                                                                                     @RequestParam(required = false) String phone,
+                                                                                     @RequestParam(defaultValue = "1") Integer page,
+                                                                                     @RequestParam(defaultValue = "100") Integer size) {
+        PageImplResDto<StoreByProductResDto> result = promotionService.getStoreByProductId(productId, address, name, phone, page, size);
+        return ResponseEntity.ok(result);
+    }
+}
