@@ -2,6 +2,7 @@ package com.sonnh.retailmanagerv2.controller.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sonnh.retailmanagerv2.dto.request.admin.CreatePromotionAllStoreReqDto;
 import com.sonnh.retailmanagerv2.dto.request.admin.PromotionCreateReqDto;
 import com.sonnh.retailmanagerv2.dto.request.admin.StoreCreateReqDto;
 import com.sonnh.retailmanagerv2.dto.response.PageImplResDto;
@@ -39,9 +40,9 @@ public class AdminPromotionController {
     )
     public String createPromotion(@RequestPart("promotion") String promotionJson, @RequestPart("images") MultipartFile images) {
         try {
-            PromotionCreateReqDto dto = (PromotionCreateReqDto)this.objectMapper.readValue(promotionJson, PromotionCreateReqDto.class);
+            PromotionCreateReqDto dto = (PromotionCreateReqDto) this.objectMapper.readValue(promotionJson, PromotionCreateReqDto.class);
 //            return ResponseEntity.ok(this.promotionService.createPromotion(dto));
-          return  this.promotionService.createPromotion(dto);
+            return this.promotionService.createPromotion(dto);
         } catch (JsonProcessingException ex) {
             log.error("lỗi parse json từ promotionJson: {}", promotionJson, ex);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -49,7 +50,7 @@ public class AdminPromotionController {
     }
 
     @GetMapping({"/getStoresByProductId"})
-    public ResponseEntity<PageImplResDto<StoreByProductResDto>> getStoresByProductId(@RequestParam(required = true) UUID productId,
+    public ResponseEntity<PageImplResDto<StoreByProductResDto>> getStoresByProductId(@RequestParam UUID productId,
                                                                                      @RequestParam(required = false) String address,
                                                                                      @RequestParam(required = false) String name,
                                                                                      @RequestParam(required = false) String phone,
@@ -57,5 +58,12 @@ public class AdminPromotionController {
                                                                                      @RequestParam(defaultValue = "100") Integer size) {
         PageImplResDto<StoreByProductResDto> result = promotionService.getStoreByProductId(productId, address, name, phone, page, size);
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping(value = "/createPromotionAllStore")
+    public String createPromotionAllStore(@RequestParam UUID productId,
+                                          @RequestBody CreatePromotionAllStoreReqDto promotionDto) {
+        String result = promotionService.createPromotionAllStore(productId, promotionDto);
+        return result;
     }
 }

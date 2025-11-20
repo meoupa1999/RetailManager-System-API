@@ -8,10 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -41,11 +38,35 @@ public class StoreInventory {
     @OneToMany(mappedBy = "product")
     private List<Guaranted> guarantedList = new ArrayList();
 
+    @ManyToMany
+    @JoinTable(
+            name = "promotion_storeinventory",
+            joinColumns = @JoinColumn(name = "storeiventory_id"),
+            inverseJoinColumns = @JoinColumn(name = "promotion_id")
+    )
+    private Set<Promotion> promotionList = new HashSet<>();
 
     public void addCategory(Category category) {
         category.getStoreInventoryList().add(this);
         this.setCategory(category);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StoreInventory)) return false;
 
+        StoreInventory storeInventory = (StoreInventory) o;
+
+        if (this.id == null || storeInventory.id == null) {
+            return false;
+        }
+
+        return this.id.equals(storeInventory.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return (id == null) ? System.identityHashCode(this) : id.hashCode();
+    }
 }

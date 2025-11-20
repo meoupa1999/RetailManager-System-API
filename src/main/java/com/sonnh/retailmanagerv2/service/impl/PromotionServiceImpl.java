@@ -2,16 +2,18 @@ package com.sonnh.retailmanagerv2.service.impl;
 
 import com.sonnh.retailmanagerv2.data.domain.Promotion;
 import com.sonnh.retailmanagerv2.data.domain.Store;
+import com.sonnh.retailmanagerv2.data.domain.StoreInventory;
 import com.sonnh.retailmanagerv2.data.domain.Store_StoreInventory;
 import com.sonnh.retailmanagerv2.data.repository.PromotionRepository;
+import com.sonnh.retailmanagerv2.data.repository.StoreInventoryRepository;
 import com.sonnh.retailmanagerv2.data.repository.StoreRepository;
 import com.sonnh.retailmanagerv2.data.repository.Store_StoreInventoryRepository;
 import com.sonnh.retailmanagerv2.data.specification.StoreInventoryByProductSpecification;
-import com.sonnh.retailmanagerv2.data.specification.StoreSpecification;
+import com.sonnh.retailmanagerv2.dto.request.admin.CreatePromotionAllStoreReqDto;
 import com.sonnh.retailmanagerv2.dto.request.admin.PromotionCreateReqDto;
 import com.sonnh.retailmanagerv2.dto.response.PageImplResDto;
 import com.sonnh.retailmanagerv2.dto.response.admin.StoreByProductResDto;
-import com.sonnh.retailmanagerv2.dto.response.admin.StoreResDto;
+import com.sonnh.retailmanagerv2.mapper.PromotionMapper;
 import com.sonnh.retailmanagerv2.mapper.StoreMapper;
 import com.sonnh.retailmanagerv2.service.interfaces.PromotionService;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +21,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import java.util.Optional;
 import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +34,9 @@ public class PromotionServiceImpl implements PromotionService {
     private final PromotionRepository promotionRepository;
     private final Store_StoreInventoryRepository store_storeInventoryRepository;
     private final StoreRepository storeRepository;
+    private final StoreInventoryRepository storeInventoryRepository;
     private final StoreMapper storeMapper;
+    private final PromotionMapper promotionMapper;
     @Override
     @Transactional
     public String createPromotion(PromotionCreateReqDto dto) {
@@ -82,7 +84,15 @@ public class PromotionServiceImpl implements PromotionService {
         return PageImplResDto.fromPage(dto);
     }
 
-
+    @Override
+    @Transactional
+    public String createPromotionAllStore(UUID productId,CreatePromotionAllStoreReqDto dto) {
+        Promotion promotion = Optional.ofNullable(dto).map(promotionMapper::toPromotionEntity).get();
+        promotionRepository.save(promotion);
+        StoreInventory storeInventory = storeInventoryRepository.findById(productId).get();
+        promotion.addProduct(storeInventory);
+        return "Success";
+    }
 
 
 }
