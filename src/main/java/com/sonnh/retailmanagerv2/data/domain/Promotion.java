@@ -10,10 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -27,15 +24,43 @@ public class Promotion {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(nullable = false, columnDefinition = "uniqueIdentifier")
     private UUID id;
+    private String name;
     private Double discountPercent;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     @Enumerated(EnumType.STRING)
     private PromotionStatus status;
+
     @Embedded
     private Audit audit = new Audit();
 
+    @ManyToMany(mappedBy = "promotionStoreStoreInventoryList")
+    private List<Store_StoreInventory> store_storeInventoryList = new ArrayList<>();
+
     @ManyToMany(mappedBy = "promotionList")
-    private List<StoreInventory> storeInventoryList = new ArrayList<>();
+    private Set<StoreInventory> storeInventoryList = new HashSet<>();
+
+
+
+    public void addProduct(StoreInventory product) {
+        product.getPromotionList().add(this);
+        this.getStoreInventoryList().add(product);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Promotion)) return false;
+        Promotion promotion = (Promotion) o;
+        if (this.id == null || promotion.id == null) {
+            return false;
+        }
+        return this.id.equals(promotion.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return (id == null) ? System.identityHashCode(this) : id.hashCode();
+    }
 
 }

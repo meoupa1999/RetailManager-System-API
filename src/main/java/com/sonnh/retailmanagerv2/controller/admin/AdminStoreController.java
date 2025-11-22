@@ -53,8 +53,8 @@ public class AdminStoreController {
         try {
             StoreCreateReqDto dto = (StoreCreateReqDto)this.objectMapper.readValue(storeJson, StoreCreateReqDto.class);
             return ResponseEntity.ok(this.storeService.createStore(dto));
-        } catch (JsonProcessingException var4) {
-            log.error("lỗi parse json từ storeJson: {}", storeJson, var4);
+        } catch (JsonProcessingException ex) {
+            log.error("lỗi parse json từ storeJson: {}", storeJson, ex);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
