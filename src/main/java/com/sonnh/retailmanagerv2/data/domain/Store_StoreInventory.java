@@ -43,7 +43,7 @@ public class Store_StoreInventory {
             joinColumns = @JoinColumn(name = "store_storeinventory_id"),
             inverseJoinColumns = @JoinColumn(name = "promotion_id")
     )
-    private List<Promotion> promotionList = new ArrayList<>();
+    private List<Promotion> promotionStoreStoreInventoryList = new ArrayList<>();
     public void addStore(Store store) {
         store.getStoreStoreInventoryList().add(this);
         this.setStore(store);
@@ -56,6 +56,6 @@ public class Store_StoreInventory {
 
     public void addPromotion(Promotion promotion) {
         promotion.getStore_storeInventoryList().add(this);
-        this.getPromotionList().add(promotion);
+        this.getPromotionStoreStoreInventoryList().add(promotion);
     }
 }

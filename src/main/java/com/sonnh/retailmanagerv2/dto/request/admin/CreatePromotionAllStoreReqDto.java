@@ -9,6 +9,8 @@ import lombok.Value;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * DTO for {@link com.sonnh.retailmanagerv2.data.domain.Promotion}
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class CreatePromotionAllStoreReqDto implements Serializable {
+   List<UUID> productIdList;
    private String name;
    private Double discountPercent;
    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")

@@ -30,10 +30,11 @@ public class Promotion {
     private LocalDateTime endDate;
     @Enumerated(EnumType.STRING)
     private PromotionStatus status;
+
     @Embedded
     private Audit audit = new Audit();
 
-    @ManyToMany(mappedBy = "promotionList")
+    @ManyToMany(mappedBy = "promotionStoreStoreInventoryList")
     private List<Store_StoreInventory> store_storeInventoryList = new ArrayList<>();
 
     @ManyToMany(mappedBy = "promotionList")

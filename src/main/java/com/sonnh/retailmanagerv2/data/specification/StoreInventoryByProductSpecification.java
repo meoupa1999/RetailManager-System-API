@@ -14,10 +14,8 @@ public class StoreInventoryByProductSpecification {
 
     public static Specification<Store> hasProductId(UUID productId) {
         return (root, query, cb) -> {
-            // JOIN product -> category
             Join<Store, Store_StoreInventory> ssiJoin = root.join("storeStoreInventoryList", JoinType.INNER);
             Join<Store_StoreInventory, StoreInventory> siJoin = ssiJoin.join("storeInventory", JoinType.INNER);
-
             return cb.equal(siJoin.get("id"), productId);
         };
     }

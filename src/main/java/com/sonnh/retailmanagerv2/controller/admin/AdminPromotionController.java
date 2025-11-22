@@ -2,12 +2,12 @@ package com.sonnh.retailmanagerv2.controller.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sonnh.retailmanagerv2.data.domain.enums.PromotionStatus;
 import com.sonnh.retailmanagerv2.dto.request.admin.CreatePromotionAllStoreReqDto;
 import com.sonnh.retailmanagerv2.dto.request.admin.PromotionCreateReqDto;
 import com.sonnh.retailmanagerv2.dto.request.admin.StoreCreateReqDto;
 import com.sonnh.retailmanagerv2.dto.response.PageImplResDto;
-import com.sonnh.retailmanagerv2.dto.response.admin.StoreByProductResDto;
-import com.sonnh.retailmanagerv2.dto.response.admin.StoreResDto;
+import com.sonnh.retailmanagerv2.dto.response.admin.*;
 import com.sonnh.retailmanagerv2.service.interfaces.PromotionService;
 import com.sonnh.retailmanagerv2.service.interfaces.StoreService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -61,9 +62,31 @@ public class AdminPromotionController {
     }
 
     @PostMapping(value = "/createPromotionAllStore")
-    public String createPromotionAllStore(@RequestParam UUID productId,
-                                          @RequestBody CreatePromotionAllStoreReqDto promotionDto) {
-        String result = promotionService.createPromotionAllStore(productId, promotionDto);
+    public String createPromotionAllStore(@RequestBody CreatePromotionAllStoreReqDto promotionDto) {
+        String result = promotionService.createPromotionAllStore(promotionDto);
         return result;
+    }
+
+    @GetMapping({"/getAllPromotion"})
+    public ResponseEntity<PageImplResDto<PromotionsResDto>> getAllPromotion(@RequestParam(required = false) String name, @RequestParam(required = false) PromotionStatus status, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "100") Integer size) {
+        PageImplResDto<PromotionsResDto> result = promotionService.getAllPromotion(name, status, page, size);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping({"/getAllProductByPromotionId"})
+    public ResponseEntity<PageImplResDto<ProductByPromotionResDto>> getAllProductByPromotionId(@RequestParam UUID promotionId,
+                                                                                               @RequestParam(required = false) String code,
+                                                                                               @RequestParam(required = false) String name,
+                                                                                               @RequestParam(required = false) String brand,
+                                                                                               @RequestParam(defaultValue = "1") Integer page,
+                                                                                               @RequestParam(defaultValue = "100") Integer size) {
+        PageImplResDto<ProductByPromotionResDto> result = promotionService.getProductsByPromotionId(promotionId, code,name,brand, page, size);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping({"/getProductAndStoreByPromotionId"})
+    public ResponseEntity<List<ProductAndStoreListResDto>> getProductAndStoreByPromotionId(@RequestParam UUID promotionId) {
+        List<ProductAndStoreListResDto> result = promotionService.getProductAndStoreByPromotionId(promotionId);
+        return ResponseEntity.ok(result);
     }
 }
