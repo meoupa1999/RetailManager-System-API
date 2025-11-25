@@ -3,8 +3,10 @@ package com.sonnh.retailmanagerv2.service.interfaces;
 import com.sonnh.retailmanagerv2.data.domain.enums.PromotionStatus;
 import com.sonnh.retailmanagerv2.dto.request.admin.CreatePromotionAllStoreReqDto;
 import com.sonnh.retailmanagerv2.dto.request.admin.PromotionCreateReqDto;
+import com.sonnh.retailmanagerv2.dto.request.admin.PromotionUpdateReqDto;
 import com.sonnh.retailmanagerv2.dto.response.PageImplResDto;
 import com.sonnh.retailmanagerv2.dto.response.admin.ProductAndStoreListResDto;
+import com.sonnh.retailmanagerv2.dto.response.admin.PromotionDetailResDto;
 import com.sonnh.retailmanagerv2.dto.response.admin.StoreByProductResDto;
 
 import java.util.List;
@@ -23,6 +25,12 @@ public interface PromotionService {
 
 //    public PageImplResDto getProductAndStoreByPromotionId(UUID promotionId, Integer page, Integer size);
 
-    public List<ProductAndStoreListResDto> getProductAndStoreByPromotionId(UUID promotionId);
+    public ProductAndStoreListResDto getProductAndStoreByPromotionId(UUID promotionId);
+
+    public String updatePromotion(UUID promotionId, PromotionUpdateReqDto dto);
+
+    public PromotionDetailResDto getPromotionDetail(UUID promotionId);
+
+    public String deletePromotion(UUID promotionId);
 
 }

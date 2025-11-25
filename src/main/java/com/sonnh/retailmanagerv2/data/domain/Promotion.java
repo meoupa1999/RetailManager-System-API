@@ -2,6 +2,7 @@ package com.sonnh.retailmanagerv2.data.domain;
 
 import com.sonnh.retailmanagerv2.data.domain.embedded.Audit;
 import com.sonnh.retailmanagerv2.data.domain.enums.PromotionStatus;
+import com.sonnh.retailmanagerv2.data.domain.enums.PromotionType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,9 @@ public class Promotion {
     private LocalDateTime endDate;
     @Enumerated(EnumType.STRING)
     private PromotionStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private PromotionType type;
 
     @Embedded
     private Audit audit = new Audit();

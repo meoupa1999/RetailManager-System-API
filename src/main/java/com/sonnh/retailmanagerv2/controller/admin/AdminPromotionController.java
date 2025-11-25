@@ -1,10 +1,12 @@
 package com.sonnh.retailmanagerv2.controller.admin;
 
+import com.azure.core.annotation.Put;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sonnh.retailmanagerv2.data.domain.enums.PromotionStatus;
 import com.sonnh.retailmanagerv2.dto.request.admin.CreatePromotionAllStoreReqDto;
 import com.sonnh.retailmanagerv2.dto.request.admin.PromotionCreateReqDto;
+import com.sonnh.retailmanagerv2.dto.request.admin.PromotionUpdateReqDto;
 import com.sonnh.retailmanagerv2.dto.request.admin.StoreCreateReqDto;
 import com.sonnh.retailmanagerv2.dto.response.PageImplResDto;
 import com.sonnh.retailmanagerv2.dto.response.admin.*;
@@ -85,8 +87,27 @@ public class AdminPromotionController {
     }
 
     @GetMapping({"/getProductAndStoreByPromotionId"})
-    public ResponseEntity<List<ProductAndStoreListResDto>> getProductAndStoreByPromotionId(@RequestParam UUID promotionId) {
-        List<ProductAndStoreListResDto> result = promotionService.getProductAndStoreByPromotionId(promotionId);
+    public ResponseEntity<ProductAndStoreListResDto> getProductAndStoreByPromotionId(@RequestParam UUID promotionId) {
+        ProductAndStoreListResDto result = promotionService.getProductAndStoreByPromotionId(promotionId);
         return ResponseEntity.ok(result);
+    }
+
+    @PutMapping(
+            value = "/updatePromotion")
+    public String updatePromotion(@RequestParam UUID promotionId, @RequestBody PromotionUpdateReqDto dto) {
+        String result = promotionService.updatePromotion(promotionId,dto);
+        return result;
+    }
+
+    @GetMapping({"/getPromotionDetail"})
+    public ResponseEntity<PromotionDetailResDto> getPromotionDetail(@RequestParam UUID promotionId) {
+        PromotionDetailResDto result = promotionService.getPromotionDetail(promotionId);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping({"/deletePromotion"})
+    public String deletePromotion(@RequestParam UUID promotionId) {
+        String result = promotionService.deletePromotion(promotionId);
+        return result;
     }
 }

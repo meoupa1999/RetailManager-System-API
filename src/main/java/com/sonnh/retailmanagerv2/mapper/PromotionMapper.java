@@ -5,6 +5,7 @@ import com.sonnh.retailmanagerv2.data.domain.StoreInventory;
 import com.sonnh.retailmanagerv2.dto.request.admin.CreatePromotionAllStoreReqDto;
 import com.sonnh.retailmanagerv2.dto.response.admin.ProductAndStoreListResDto;
 import com.sonnh.retailmanagerv2.dto.response.admin.ProductByPromotionResDto;
+import com.sonnh.retailmanagerv2.dto.response.admin.PromotionDetailAllStoreResDto;
 import com.sonnh.retailmanagerv2.dto.response.admin.PromotionsResDto;
 import org.mapstruct.*;
 
@@ -21,6 +22,10 @@ public interface PromotionMapper {
 //    StoreInventory toEntity(ProductByPromotionResDto productByPromotionResDto);
 
     ProductByPromotionResDto toProductByPromotionResDto(StoreInventory storeInventory);
+
+    PromotionDetailAllStoreResDto toPromotionDetailAllStoreResDto(Promotion promotion);
+
+
 
 //    StoreInventory toEntity(ProductAndStoreListResDto productAndStoreListResDto);
 

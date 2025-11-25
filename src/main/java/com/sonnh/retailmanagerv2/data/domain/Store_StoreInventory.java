@@ -58,4 +58,9 @@ public class Store_StoreInventory {
         promotion.getStore_storeInventoryList().add(this);
         this.getPromotionStoreStoreInventoryList().add(promotion);
     }
+
+    public void removePromotion(Promotion promotion) {
+        promotion.getStore_storeInventoryList().remove(this);
+        this.getPromotionStoreStoreInventoryList().remove(promotion);
+    }
 }
