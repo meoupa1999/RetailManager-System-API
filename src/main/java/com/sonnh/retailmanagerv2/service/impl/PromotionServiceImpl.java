@@ -50,6 +50,8 @@ public class PromotionServiceImpl implements PromotionService {
         promotion.setDiscountPercent(dto.getDiscountPercent());
         promotion.setStartDate(dto.getStartDate());
         promotion.setEndDate(dto.getEndDate());
+        promotion.setStatus(PromotionStatus.PENDING);
+        promotion.setType(PromotionType.BY_STORE);
         promotionRepository.save(promotion);
 
         for (PromotionCreateReqDto.ProductDto productDto : dto.getProductDtoList()) {
@@ -93,6 +95,7 @@ public class PromotionServiceImpl implements PromotionService {
     public String createPromotionAllStore(CreatePromotionAllStoreReqDto dto) {
         Promotion promotion = Optional.ofNullable(dto).map(promotionMapper::toPromotionEntity).get();
         promotion.setStatus(PromotionStatus.PENDING);
+        promotion.setType(PromotionType.ALL_STORE);
         promotionRepository.save(promotion);
         for (UUID productId : dto.getProductIdList()) {
             StoreInventory storeInventory = storeInventoryRepository.findById(productId).get();
