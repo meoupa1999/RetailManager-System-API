@@ -3,6 +3,7 @@ package com.sonnh.retailmanagerv2.dto.request.admin;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -10,13 +11,13 @@ import java.util.UUID;
 @Data
 public class PromotionCreateReqDto implements Serializable {
     private String name;
-    private Double discountPercent;
+    private BigDecimal discountPercent;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private List<ProductDto> productDtoList;
 
     public PromotionCreateReqDto(String name,
-                                 Double discountPercent,
+                                 BigDecimal discountPercent,
                                  LocalDateTime startDate,
                                  LocalDateTime endDate,
                                  List<ProductDto> productDtoList) {

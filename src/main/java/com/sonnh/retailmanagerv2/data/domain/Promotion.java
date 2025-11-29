@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -26,7 +27,8 @@ public class Promotion {
     @Column(nullable = false, columnDefinition = "uniqueIdentifier")
     private UUID id;
     private String name;
-    private Double discountPercent;
+    @Column(precision = 5, scale = 2)
+    private BigDecimal discountPercent;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     @Enumerated(EnumType.STRING)

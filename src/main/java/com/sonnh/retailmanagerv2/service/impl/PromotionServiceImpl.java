@@ -113,9 +113,9 @@ public class PromotionServiceImpl implements PromotionService {
             spec = spec.and(PromotionSpecification.nameContains(name));
         }
 
-        if (status != null) {
-            spec = spec.and(PromotionSpecification.statusFilter(status));
-        }
+//        if (status != null) {
+//            spec = spec.and(PromotionSpecification.statusFilter(status));
+//        }
 
         spec = spec.and(PromotionSpecification.isActive());
         PageRequest pageable = PageRequest.of(page != null && page > 0 ? page - 1 : 0, size != null && size > 0 ? size : 100, Sort.by(Sort.Direction.DESC, new String[]{"audit.updatedAt"}));

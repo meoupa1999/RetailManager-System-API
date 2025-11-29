@@ -31,8 +31,12 @@ public class Account {
     private String address;
     private String note;
     private long loyaltyPoint;
-    @Enumerated(EnumType.STRING)
-    private RankStatus rankStatus;
+//    @Enumerated(EnumType.STRING)
+//    private RankStatus rankStatus;
+    @ManyToOne
+    @JoinColumn(name = "rank_id")
+    private Rank rank;
+
     private Double latitude;
     private Double longgitude;
     @Embedded
