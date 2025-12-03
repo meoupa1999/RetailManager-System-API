@@ -46,5 +46,8 @@ public class Store {
     @OneToMany(mappedBy = "store")
     private List<ImportStoreSummary> importStoreSummaryList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "store")
+    private List<Account> empoyeeAccountList = new ArrayList<>();
+
 
 }

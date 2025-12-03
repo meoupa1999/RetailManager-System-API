@@ -46,6 +46,10 @@ public class Account {
     private Role role;
 
     @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
+
+    @ManyToOne
     @JoinColumn(name = "customerRank_id")
     private CustomerRank customerRank;
 

@@ -17,4 +17,8 @@ public interface StoreRepository extends JpaRepository<Store, UUID>, JpaSpecific
             "JOIN ssi.promotionStoreStoreInventoryList p " +
             "WHERE ssi.storeInventory.id = :productId AND p.id = :promotionId AND s.audit.isActive = true ")
     List<Store> findStoreByProductIdAndPromotionId(UUID productId,UUID promotionId);
+
+
+    @Query("SELECT a.store.id FROM Account a WHERE a.username = :username")
+    UUID findStoreIdByUsername(String username);
 }

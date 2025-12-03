@@ -1,5 +1,6 @@
 package com.sonnh.retailmanagerv2.controller.admin;
 
+import com.sonnh.retailmanagerv2.data.repository.StoreRepository;
 import com.sonnh.retailmanagerv2.dto.request.admin.UserDto;
 import com.sonnh.retailmanagerv2.security.JwtUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @Tag(name = "Login (Admin)")
 @RequestMapping("/api/admin/auth")
@@ -17,13 +20,15 @@ import org.springframework.web.bind.annotation.*;
 public class AdminLoginController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    private final StoreRepository storeRepository;
 
     @PostMapping("/login")
     public String login(@RequestBody UserDto dto) {
         System.out.println("Chay vo day ne ");
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(),dto.getPassword()));
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String result = jwtUtils.generateToken(userDetails);
+        UUID storeId = storeRepository.findStoreIdByUsername(userDetails.getUsername());
+        String result = jwtUtils.generateToken(userDetails,storeId);
         System.out.println("result: " + result);
         return result;
     }

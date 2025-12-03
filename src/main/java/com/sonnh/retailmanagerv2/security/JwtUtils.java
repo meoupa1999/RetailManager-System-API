@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class JwtUtils {
@@ -19,9 +20,10 @@ public class JwtUtils {
     @Value("${app.jwt.expiration}")
     private Long jwtExpiration;
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, UUID storeId) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())  // gắn username
+                .claim("storeId",storeId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
@@ -45,6 +47,10 @@ public class JwtUtils {
 
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
+    }
+
+    public UUID extractStoreId(String token) {
+        return UUID.fromString((String)extractAllClaims(token).get("storeId")) ;
     }
 
     public boolean validateJwtToken(String token, UserDetails userDetails) {
