@@ -66,8 +66,6 @@ public class StoreServiceImpl implements StoreService {
         spec = spec.and(StoreSpecification.isActive());
         PageRequest pageable = PageRequest.of(page != null && page > 0 ? page - 1 : 0, size != null && size > 0 ? size : 100, Sort.by(Sort.Direction.DESC, new String[]{"audit.updatedAt"}));
         Page<Store> storePage = this.storeRepository.findAll(spec, pageable);
-//        StoreMapper var10001 = this.storeMapper;
-//        Objects.requireNonNull(var10001);
         Page<StoreResDto> dto = storePage.map(storeMapper::toStoreResDto);
         return PageImplResDto.fromPage(dto);
     }

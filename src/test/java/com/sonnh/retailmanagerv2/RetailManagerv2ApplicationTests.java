@@ -1,9 +1,7 @@
 package com.sonnh.retailmanagerv2;
 
-import com.sonnh.retailmanagerv2.data.domain.Store;
-import com.sonnh.retailmanagerv2.data.domain.Warehouse;
-import com.sonnh.retailmanagerv2.data.domain.WarehouseInventory;
-import com.sonnh.retailmanagerv2.data.domain.Warehouse_WarehouseInventory;
+import com.sonnh.retailmanagerv2.data.domain.*;
+import com.sonnh.retailmanagerv2.data.repository.AccountRepository;
 import com.sonnh.retailmanagerv2.data.repository.StoreRepository;
 import com.sonnh.retailmanagerv2.data.repository.WarehouseInventoryRepository;
 import com.sonnh.retailmanagerv2.data.repository.WarehouseRepository;
@@ -16,6 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +34,8 @@ class RetailManagerv2ApplicationTests {
     StoreRepository storeRepository;
     @Autowired
     StoreImportService storeImportService;
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Test
     void contextLoads() {
@@ -220,6 +221,11 @@ class RetailManagerv2ApplicationTests {
     @Transactional
     void myTest3() {
 //        storeImportService.importProductForStore(UUID.fromString("af516852-1914-4d69-8729-189ef6e80238"));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String plainPassword = "123456";
+
+        Account account =  accountRepository.findById(UUID.fromString("acf30ca3-3da1-474e-a41a-146fabe05e3d")).get();
+        account.setPassword(passwordEncoder.encode(plainPassword));
     }
 
 
