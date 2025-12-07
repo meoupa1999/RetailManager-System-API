@@ -50,6 +50,11 @@ public class JwtUtils {
     }
 
     public UUID extractStoreId(String token) {
+        Claims claims = extractAllClaims(token);
+        String storeId = claims.get("storeId", String.class);
+        if (storeId == null || storeId.isBlank()) {
+            return null; // KHÔNG có storeId trong token
+        }
         return UUID.fromString((String)extractAllClaims(token).get("storeId")) ;
     }
 

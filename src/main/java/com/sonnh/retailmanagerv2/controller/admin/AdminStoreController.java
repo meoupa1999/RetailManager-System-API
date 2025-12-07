@@ -40,8 +40,8 @@ public class AdminStoreController {
     public ResponseEntity<PageImplResDto<StoreResDto>> getAllStores(@RequestParam(required = false) String name, @RequestParam(required = false) String phone, @RequestParam(required = false) String mail, @RequestParam(required = false) String address, @RequestParam(required = false) String ward, @RequestParam(required = false) String district, @RequestParam(required = false) String province, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "100") Integer size) {
         PageImplResDto<StoreResDto> result = storeService.getAllStore(name, phone, mail, address, ward, district, province, page, size);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        StoreContextDetail context = (StoreContextDetail) auth.getDetails();
-//        UUID id = context.getStoreID();
+        StoreContextDetail context = (StoreContextDetail) auth.getDetails();
+        UUID id = context.getStoreID();
         return ResponseEntity.ok(result);
     }
 

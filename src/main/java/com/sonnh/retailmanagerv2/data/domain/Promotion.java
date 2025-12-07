@@ -29,6 +29,7 @@ public class Promotion {
     private String name;
     @Column(precision = 5, scale = 2)
     private BigDecimal discountPercent;
+    private Long maxDiscountAmount;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     @Enumerated(EnumType.STRING)

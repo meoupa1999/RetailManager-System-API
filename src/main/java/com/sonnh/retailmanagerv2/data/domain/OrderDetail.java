@@ -21,11 +21,11 @@ public class OrderDetail { @Id @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(nullable = false, columnDefinition = "uniqueIdentifier")
     private UUID id;
-    private Integer quantity;
-    private Double unitPrice;
-    private Double originalPrice;
-    private Double discountPercent;
-    private Double totalPrice;
+    private Long quantity;
+    private Long unitPrice;
+    private Long originalPrice;
+    private Long discountAmount;
+    private Long totalPrice;
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Orders order;

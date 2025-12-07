@@ -24,6 +24,7 @@ public class StoreInventory {
     private UUID id;
     private String productCode;
     private String name;
+    private Long price;
     private String brand;
     private String description;
     @Embedded

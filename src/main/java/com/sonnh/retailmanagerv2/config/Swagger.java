@@ -24,8 +24,8 @@ public class Swagger {
     }
 
     @Bean
-    public GroupedOpenApi staffGroup() {
-        return GroupedOpenApi.builder().group("Staff API").pathsToMatch(new String[]{"/api/staff/**"}).build();
+    public GroupedOpenApi EmployeeGroup() {
+        return GroupedOpenApi.builder().group("Employee API").pathsToMatch(new String[]{"/api/employee/**"}).build();
     }
 
     @Bean
