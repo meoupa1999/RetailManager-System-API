@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 public class Swagger {
     @Bean
     public OpenAPI customOpenAPI() {
-        return (new OpenAPI()).info((new Info()).title("CSS API").description("Make It Great Again").contact((new Contact()).email("css@gmail.com").name("Css-System")).license((new License()).name("Apache 2.0").url("https://www.apache.org/licenses/LICENSE-2.0.html")).version("1.0.0")).components((new Components()).addSecuritySchemes("BEARER_JWT", (new SecurityScheme()).type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT").in(SecurityScheme.In.HEADER).name("Authorization"))).addSecurityItem((new SecurityRequirement()).addList("BEARER_JWT"));
+        return (new OpenAPI()).info((new Info()).title("Retail Manager").description("Developed By Sonnh").contact((new Contact()).email("nguyenhaison8999@gmail.com").name("Retail Manager")).license((new License()).name("Apache 2.0").url("https://www.apache.org/licenses/LICENSE-2.0.html")).version("1.0.0")).components((new Components()).addSecuritySchemes("BEARER_JWT", (new SecurityScheme()).type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT").in(SecurityScheme.In.HEADER).name("Authorization"))).addSecurityItem((new SecurityRequirement()).addList("BEARER_JWT"));
     }
 
     @Bean
@@ -24,8 +24,8 @@ public class Swagger {
     }
 
     @Bean
-    public GroupedOpenApi staffGroup() {
-        return GroupedOpenApi.builder().group("Staff API").pathsToMatch(new String[]{"/api/staff/**"}).build();
+    public GroupedOpenApi EmployeeGroup() {
+        return GroupedOpenApi.builder().group("Employee API").pathsToMatch(new String[]{"/api/employee/**"}).build();
     }
 
     @Bean

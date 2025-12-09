@@ -1,6 +1,7 @@
 package com.sonnh.retailmanagerv2.data.domain.enums;
 
 public enum OrderStatus {
+    DRAFT,
     COMPLETED,
     CANCELLED,
     PENDING,

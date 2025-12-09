@@ -31,14 +31,16 @@ public class Orders {
     private UUID id;
     private String shipAddress;
     private String shipPhone;
-    private Double totalPriceBeforeDiscount;
-    private Double totalPriceAfterDiscount;
-    private Double finalPrice;
+    private Long totalPriceBeforeDiscount;
+//    private Double totalPriceAfterDiscount;
+    private Long totalDiscountProduct;
+    private Long totalDiscountRank;
+    private Long finalPrice;
     @Enumerated(EnumType.STRING)
     private OrderType orderType;
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
-    private Integer pointEarned;
+//    private Integer pointEarned;
     private String description;
     @Enumerated(EnumType.STRING)
     private RankStatus rankApplied;
