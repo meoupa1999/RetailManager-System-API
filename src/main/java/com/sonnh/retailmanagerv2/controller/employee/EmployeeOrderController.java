@@ -1,5 +1,6 @@
 package com.sonnh.retailmanagerv2.controller.employee;
 
+import com.azure.core.annotation.Post;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sonnh.retailmanagerv2.dto.request.admin.StoreCreateReqDto;
 import com.sonnh.retailmanagerv2.dto.request.customer.CreateDraftOrderReqDto;
@@ -21,10 +22,25 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EmployeeOrderController {
     private final OrderInStoreService orderInStoreService;
+
     @PostMapping(value = {"/createDraftOrder"})
     public ResponseEntity<DraftOrderResDto> createDraftOrder(@RequestBody CreateDraftOrderReqDto dto) {
         DraftOrderResDto result = orderInStoreService.createDraftOrder(dto);
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping(value = "/acceptDraftOrder")
+    public String acceptDraftOrder(@RequestParam UUID draftId) {
+        System.out.println("run controller");
+        orderInStoreService.acceptDraftOrder(draftId);
+        return "Success";
+    }
+
+    @DeleteMapping(value = "/cancelDraftOrder")
+    public String cancelDraftOrder(@RequestParam UUID draftId) {
+        System.out.println("draft Id: " + draftId);
+        orderInStoreService.cancelDraftOrder(draftId);
+        return "Success";
     }
 
 }

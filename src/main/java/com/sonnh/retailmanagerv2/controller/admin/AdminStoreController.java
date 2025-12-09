@@ -41,7 +41,7 @@ public class AdminStoreController {
         PageImplResDto<StoreResDto> result = storeService.getAllStore(name, phone, mail, address, ward, district, province, page, size);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         StoreContextDetail context = (StoreContextDetail) auth.getDetails();
-        UUID id = context.getStoreID();
+        UUID id = context.getStoreId();
         return ResponseEntity.ok(result);
     }
 

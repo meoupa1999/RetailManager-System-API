@@ -30,4 +30,10 @@ public class InventoryRedis implements Serializable {
     public int hashCode() {
         return (productId == null) ? System.identityHashCode(this) : productId.hashCode();
     }
+
+    public boolean containsProductId(UUID productId) {
+        if (this.getProductId().equals(productId))
+            return true;
+        return false;
+    }
 }

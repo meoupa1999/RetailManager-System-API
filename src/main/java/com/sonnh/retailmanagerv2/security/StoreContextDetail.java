@@ -8,9 +8,9 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 public class StoreContextDetail implements Serializable {
-    private UUID storeID;
+    private UUID storeId;
 
     public StoreContextDetail(UUID storeID) {
-        this.storeID = storeID;
+        this.storeId = storeID;
     }
 }

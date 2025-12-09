@@ -31,4 +31,17 @@ public class OrderDetail { @Id @GeneratedValue(generator = "UUID")
     private Orders order;
     @OneToMany(mappedBy = "orderDetail")
     private List<Guaranted> guarantedList = new ArrayList();
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private StoreInventory product;
+
+    public void addProduct(StoreInventory product) {
+        product.getOrderDetailList().add(this);
+        this.setProduct(product);
+    }
+
+    public void addOrder(Orders order) {
+        order.getOrderDetailList().add(this);
+        this.setOrder(order);
+    }
 }

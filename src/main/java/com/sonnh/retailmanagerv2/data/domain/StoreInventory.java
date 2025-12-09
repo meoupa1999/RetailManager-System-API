@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.query.Order;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.*;
@@ -35,6 +36,8 @@ public class StoreInventory {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @OneToMany(mappedBy = "product")
+    private List<OrderDetail> orderDetailList = new ArrayList();
 
     @OneToMany(mappedBy = "product")
     private List<Guaranted> guarantedList = new ArrayList();

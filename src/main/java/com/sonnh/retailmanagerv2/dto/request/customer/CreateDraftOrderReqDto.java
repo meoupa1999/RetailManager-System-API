@@ -1,5 +1,6 @@
 package com.sonnh.retailmanagerv2.dto.request.customer;
 
+import com.sonnh.retailmanagerv2.data.domain.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.UUID;
 public class CreateDraftOrderReqDto implements Serializable {
     private UUID customerId;
     private String description;
+    private PaymentMethod paymentMethod;
     private List<ProductDto> productDtoList;
 
     @Data
