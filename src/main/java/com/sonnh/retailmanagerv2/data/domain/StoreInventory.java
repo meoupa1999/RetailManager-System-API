@@ -28,6 +28,7 @@ public class StoreInventory {
     private Long price;
     private String brand;
     private String description;
+    private Integer guarantedDuration;
     @Embedded
     private Audit audit = new Audit();
     @OneToMany(mappedBy = "storeInventory")
@@ -39,8 +40,10 @@ public class StoreInventory {
     @OneToMany(mappedBy = "product")
     private List<OrderDetail> orderDetailList = new ArrayList();
 
-    @OneToMany(mappedBy = "product")
-    private List<Guaranted> guarantedList = new ArrayList();
+    //    @OneToMany(mappedBy = "product")
+//    private List<Guaranted> guarantedList = new ArrayList();
+//    @OneToOne(mappedBy = "product")
+//    private Guaranted guaranted;
 
     @ManyToMany
     @JoinTable(

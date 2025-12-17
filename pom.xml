@@ -139,7 +139,9 @@
             <artifactId>commons-pool2</artifactId>
         </dependency>
 
-<!--  redis     -->
+
+
+        <!--  redis     -->
     </dependencies>
 
     <build>

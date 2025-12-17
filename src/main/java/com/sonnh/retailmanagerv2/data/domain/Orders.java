@@ -48,11 +48,18 @@ public class Orders {
     @Embedded
     private Audit audit = new Audit();
     @ManyToOne
-    @JoinColumn(
-            name = "customer_id"
-    )
+    @JoinColumn(name = "customer_id")
     private Account customer;
     @OneToMany(mappedBy = "order")
     private List<OrderDetail> orderDetailList = new ArrayList();
+
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
+
+    public void addStore(Store store) {
+        store.getOrdersList().add(this);
+        this.setStore(store);
+    }
 }
 

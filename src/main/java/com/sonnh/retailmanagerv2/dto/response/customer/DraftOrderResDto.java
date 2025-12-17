@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,11 +29,15 @@ public class DraftOrderResDto implements Serializable {
     private Long totalDiscountProduct;
     private Long totalDiscountRank;
     private Long finalPrice;
+    private Long finalPriceTotal;
     private OrderType orderType = OrderType.IN_STORE_PURCHASE;
     private PaymentMethod paymentMethod;
-    private RankStatus rankApplied;
+    private UUID rankId;
+    private String rankName;
+    private Long rankDiscountAmount;
+//    private LocalDateTime createdTime = LocalDateTime.now();
     List<OrderDetailDto> orderDetailDtoList;
-    List<UUID> promotionUUIDList;
+//    List<UUID> promotionUUIDList;
 
 
     @Data
@@ -46,6 +51,20 @@ public class DraftOrderResDto implements Serializable {
         private Long originalPrice;
         private Long discountAmount;
         private Long totalPrice;
+//        private GuarantedDto guarantedDto;
+        private Integer guarantedDuration;
+        private UUID promotionId;
+
+//        @Data
+//        @AllArgsConstructor
+//        @NoArgsConstructor
+//        public static class GuarantedDto implements Serializable {
+//            private UUID guarantedId;
+//            private String name;
+//            private Integer durationTime;
+//            private LocalDateTime startDate;
+//            private LocalDateTime expiredDate;
+//        }
          }
 
 }

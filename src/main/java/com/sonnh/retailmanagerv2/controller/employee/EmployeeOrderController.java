@@ -4,16 +4,23 @@ import com.azure.core.annotation.Post;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sonnh.retailmanagerv2.dto.request.admin.StoreCreateReqDto;
 import com.sonnh.retailmanagerv2.dto.request.customer.CreateDraftOrderReqDto;
+import com.sonnh.retailmanagerv2.dto.response.PageImplResDto;
+import com.sonnh.retailmanagerv2.dto.response.admin.StoreResDto;
 import com.sonnh.retailmanagerv2.dto.response.customer.DraftOrderResDto;
+import com.sonnh.retailmanagerv2.dto.response.staff.ProductByStoreIdResDto;
+import com.sonnh.retailmanagerv2.security.StoreContextDetail;
 import com.sonnh.retailmanagerv2.service.interfaces.OrderInStoreService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,16 +38,19 @@ public class EmployeeOrderController {
 
     @PostMapping(value = "/acceptDraftOrder")
     public String acceptDraftOrder(@RequestParam UUID draftId) {
-        System.out.println("run controller");
         orderInStoreService.acceptDraftOrder(draftId);
         return "Success";
     }
 
     @DeleteMapping(value = "/cancelDraftOrder")
     public String cancelDraftOrder(@RequestParam UUID draftId) {
-        System.out.println("draft Id: " + draftId);
         orderInStoreService.cancelDraftOrder(draftId);
         return "Success";
+    }
+
+    @GetMapping(value = "/getAllDraftOrder")
+    public ResponseEntity<List<DraftOrderResDto>> getAllDraftOrder() {
+        return ResponseEntity.ok(orderInStoreService.getAllDraftOrder());
     }
 
 }

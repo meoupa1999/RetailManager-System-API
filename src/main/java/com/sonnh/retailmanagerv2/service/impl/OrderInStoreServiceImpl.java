@@ -1,25 +1,41 @@
 package com.sonnh.retailmanagerv2.service.impl;
 
 import com.sonnh.retailmanagerv2.bussiness.InventoryRedis;
+import com.sonnh.retailmanagerv2.bussiness.PromotionInOrderDetail;
 import com.sonnh.retailmanagerv2.data.domain.*;
+import com.sonnh.retailmanagerv2.data.domain.enums.GuarantedStatus;
 import com.sonnh.retailmanagerv2.data.domain.enums.OrderStatus;
 import com.sonnh.retailmanagerv2.data.domain.enums.OrderType;
 import com.sonnh.retailmanagerv2.data.domain.enums.PromotionStatus;
 import com.sonnh.retailmanagerv2.data.repository.*;
+import com.sonnh.retailmanagerv2.data.specification.ProductByStoreIdSpecification;
+import com.sonnh.retailmanagerv2.data.specification.StoreSpecification;
 import com.sonnh.retailmanagerv2.dto.request.customer.CreateDraftOrderReqDto;
+import com.sonnh.retailmanagerv2.dto.response.PageImplResDto;
+import com.sonnh.retailmanagerv2.dto.response.admin.StoreResDto;
 import com.sonnh.retailmanagerv2.dto.response.customer.DraftOrderResDto;
+import com.sonnh.retailmanagerv2.dto.response.staff.ProductByStoreIdResDto;
+import com.sonnh.retailmanagerv2.mapper.ProductMapper;
 import com.sonnh.retailmanagerv2.security.StoreContextDetail;
 import com.sonnh.retailmanagerv2.service.interfaces.OrderInStoreService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.rmi.server.UID;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -32,7 +48,9 @@ public class OrderInStoreServiceImpl implements OrderInStoreService {
     private final StoreInventoryRepository storeInventoryRepository;
     private final OrdersRepository ordersRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private final GuarantedRepository guarantedRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ProductMapper productMapper;
 
     @Override
     public DraftOrderResDto createDraftOrder(CreateDraftOrderReqDto dto) {
@@ -40,11 +58,11 @@ public class OrderInStoreServiceImpl implements OrderInStoreService {
         Long totalDiscountProduct = 0L;
         Long finalPrice = 0L;
         UUID draftId = UUID.randomUUID();
-        List<UUID> promotionUUIDList = new ArrayList<>();
+//        List<UUID> promotionUUIDList = new ArrayList<>();
         List<DraftOrderResDto.OrderDetailDto> orderDetailDtoList = new ArrayList<>();
         DraftOrderResDto resultDto = new DraftOrderResDto();
         resultDto.setDraftId(draftId);
-        resultDto.setPromotionUUIDList(promotionUUIDList);
+//        resultDto.setPromotionUUIDList(promotionUUIDList);
         resultDto.setOrderDetailDtoList(orderDetailDtoList);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         StoreContextDetail context = (StoreContextDetail) auth.getDetails();
@@ -63,6 +81,10 @@ public class OrderInStoreServiceImpl implements OrderInStoreService {
         resultDto.setCustomerName(customer.getName());
         resultDto.setCustomerAddress(customer.getAddress());
         resultDto.setCustomerPhone(customer.getPhone());
+        //set rank info
+        Rank cusRank = customer.getRank();
+        resultDto.setRankId(cusRank.getId());
+        resultDto.setRankName(cusRank.getName());
         //set info chung của order
         resultDto.setDescription(dto.getDescription());
         resultDto.setPaymentMethod(dto.getPaymentMethod());
@@ -95,14 +117,15 @@ public class OrderInStoreServiceImpl implements OrderInStoreService {
                 Promotion promotion = promotionSet.stream()
                         .filter(p -> p.getAudit().getIsActive() && p.getStatus().equals(PromotionStatus.ACTIVE))
                         .peek(p -> System.out.println("Promotion: " + p.getName()))
-                        .sorted(Comparator.comparing(p -> calculatorPromotion((Promotion) p, unitPrice, quantity)).reversed())
+                        .sorted(Comparator.comparing(p -> calculatorPromotion((Promotion) p, unitPrice, quantity).getDiscountAmmount()).reversed())
                         .findFirst().orElse(null);
                 Long discountAmount = 0L;
                 if (promotion != null) {
-                    discountAmount = calculatorPromotion(promotion, unitPrice, quantity);
+                    discountAmount = calculatorPromotion(promotion, unitPrice, quantity).getDiscountAmmount();
                     totalDiscountProduct += discountAmount;
                     orderDetailDto.setDiscountAmount(discountAmount);
-                    promotionUUIDList.add(promotion.getId());
+                    orderDetailDto.setPromotionId(calculatorPromotion(promotion, unitPrice, quantity).getPromotionId());
+//                    promotionUUIDList.add(promotion.getId());
                 }
                 Long totalPrice = orginalPrice - discountAmount;
                 finalPrice += totalPrice;
@@ -110,6 +133,13 @@ public class OrderInStoreServiceImpl implements OrderInStoreService {
                 // xu li tru quantity trong redis
                 inventoryRedis.setQuantity(inventoryRedis.getQuantity() - data.getQuantity());
                 inventoryRedisList.set(inventoryRedisList.indexOf(inventoryRedis), inventoryRedis);
+                orderDetailDto.setGuarantedDuration(product.getGuarantedDuration());
+                // guaranted info
+//                Guaranted guaranted = product.getGuaranted();
+//                if (guaranted != null) {
+//                    orderDetailDto.setGuarantedId(guaranted.getId());
+//                }else
+//                    orderDetailDto.setGuarantedId(null);
             } else
                 orderDetailDto = new DraftOrderResDto.OrderDetailDto(null,
                         null,
@@ -117,12 +147,19 @@ public class OrderInStoreServiceImpl implements OrderInStoreService {
                         null,
                         null,
                         null,
-                        null);
+                        null,
+                        null,
+                        null
+                        );
             orderDetailDtoList.add(orderDetailDto);
             System.out.println("chay vo day 07");
             resultDto.setTotalPriceBeforeDiscount(totalPriceBeforeDiscount);
             resultDto.setTotalDiscountProduct(totalDiscountProduct);
             resultDto.setFinalPrice(finalPrice);
+            // xu li rank discount
+            Long rankDiscountAmount =  (cusRank.getDiscountPercent().divide(BigDecimal.valueOf(100))).multiply(BigDecimal.valueOf(finalPrice)).longValue();
+            resultDto.setRankDiscountAmount(rankDiscountAmount);
+            resultDto.setFinalPriceTotal(finalPrice - rankDiscountAmount);
             updateInventoryInRedis(storeId, inventoryRedisList);
         }
         createDraftInRedis(storeId,draftId, resultDto);
@@ -133,7 +170,10 @@ public class OrderInStoreServiceImpl implements OrderInStoreService {
     @Override
     @Transactional
     public String acceptDraftOrder(UUID draftId) {
-        String redisDraftKey = "draft:" + draftId;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        StoreContextDetail context = (StoreContextDetail) auth.getDetails();
+        UUID storeId = context.getStoreId();
+        String redisDraftKey = "draft:" + storeId + ":" + draftId;
         if (redisTemplate.hasKey(redisDraftKey) != null && redisTemplate.hasKey(redisDraftKey)) {
             DraftOrderResDto draft = (DraftOrderResDto) redisTemplate.opsForValue().get(redisDraftKey);
             Orders orders = new Orders();
@@ -145,9 +185,12 @@ public class OrderInStoreServiceImpl implements OrderInStoreService {
             orders.setPaymentMethod(draft.getPaymentMethod());
             orders.setDescription(draft.getDescription());
             orders.setStatus(OrderStatus.COMPLETED);
+            Store store = storeRepository.findById(storeId).get();
+            orders.addStore(store);
             ordersRepository.save(orders);
             // set orderDetail info
             for (DraftOrderResDto.OrderDetailDto orderDetailDto : draft.getOrderDetailDtoList()) {
+                // xử lí order detail
                 OrderDetail orderDetail = new OrderDetail();
                 StoreInventory product = storeInventoryRepository.findById(orderDetailDto.getProductId()).get();
                 orderDetail.addProduct(product);
@@ -158,6 +201,17 @@ public class OrderInStoreServiceImpl implements OrderInStoreService {
                 orderDetail.setTotalPrice(orderDetailDto.getTotalPrice());
                 orderDetail.addOrder(orders);
                 orderDetailRepository.save(orderDetail);
+                //xử lí warranty
+                Guaranted guaranted = new Guaranted();
+                guaranted.setDurationTime(product.getGuarantedDuration());
+//                guaranted.setGuarantedStatus(GuarantedStatus.VALID);
+                guaranted.setStartDate(LocalDateTime.now());
+                guaranted.setExpiredDate(LocalDateTime.now().plusDays(product.getGuarantedDuration()));
+                Account customer = accountRepository.findById(draft.getCustomerId()).get();
+                guaranted.setGuarantedStatus(GuarantedStatus.VALID);
+                guaranted.addCustomer(customer);
+                guaranted.addOrderDetail(orderDetail);
+                guarantedRepository.save(guaranted);
             }
             deleteKeyValueInRedis(draftId);
         }
@@ -173,15 +227,54 @@ public class OrderInStoreServiceImpl implements OrderInStoreService {
         return "Success";
     }
 
+    @Override
+    public PageImplResDto getAllProductByStoreId(UUID storeId, String code, String name, String brand, String categoryName, Integer page, Integer size) {
+
+        Specification<StoreInventory> spec = Specification.where((null));
+        if (storeId != null) {
+            spec = spec.and(ProductByStoreIdSpecification.hasStoreId(storeId));
+        }
+
+        if (StringUtils.hasText(code)) {
+            spec = spec.and(ProductByStoreIdSpecification.productCode(code));
+        }
+
+        if (StringUtils.hasText(name)) {
+            spec = spec.and(ProductByStoreIdSpecification.nameContains(name));
+        }
+
+        if (StringUtils.hasText(brand)) {
+            spec = spec.and(ProductByStoreIdSpecification.brandContains(brand));
+        }
+
+        if (StringUtils.hasText(categoryName)) {
+            spec = spec.and(ProductByStoreIdSpecification.categoryNameContains(categoryName));
+        }
+
+        spec = spec.and(ProductByStoreIdSpecification.isActive());
+        PageRequest pageable = PageRequest.of(page != null && page > 0 ? page - 1 : 0, size != null && size > 0 ? size : 100, Sort.by(Sort.Direction.DESC, new String[]{"audit.updatedAt"}));
+        Page<StoreInventory> productPage = this.storeInventoryRepository.findAll(spec, pageable);
+        Page<ProductByStoreIdResDto> dto = productPage.map(productMapper::toProductByStoreIdResDto);
+        return PageImplResDto.fromPage(dto);
+    }
+
+    @Override
+    public List<DraftOrderResDto> getAllDraftOrder() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        StoreContextDetail context = (StoreContextDetail) auth.getDetails();
+        UUID storeId = context.getStoreId();
+        return getAllDraftOrder(storeId);
+    }
+
     //------------
-    public Long calculatorPromotion(Promotion promotion, Long unitPrice, Long quantity) {
+    public PromotionInOrderDetail calculatorPromotion(Promotion promotion, Long unitPrice, Long quantity) {
         Long discountAmmount =
                 (BigDecimal.valueOf(unitPrice)
                         .multiply(promotion.getDiscountPercent().divide(BigDecimal.valueOf(100))))
                         .multiply(BigDecimal.valueOf(quantity)).longValue();
         if (promotion.getMaxDiscountAmount() != null && discountAmmount > promotion.getMaxDiscountAmount())
-            return promotion.getMaxDiscountAmount();
-        return discountAmmount;
+            return new PromotionInOrderDetail(promotion.getId(),promotion.getMaxDiscountAmount());
+        return new PromotionInOrderDetail(promotion.getId(),discountAmmount);
 
     }
 
@@ -202,6 +295,30 @@ public class OrderInStoreServiceImpl implements OrderInStoreService {
     public List<InventoryRedis> getInventoryInRedis(UUID storeId) {
         String redisInventoryKey = "inventory:" + storeId;
         return (List<InventoryRedis>) redisTemplate.opsForValue().get(redisInventoryKey);
+    }
+
+    public List<DraftOrderResDto> getAllDraftOrder(UUID storeId) {
+        String pattern = "draft:" + storeId + ":*";
+
+        ScanOptions options = ScanOptions.scanOptions()
+                .match(pattern)
+                .count(1000)
+                .build();
+
+        List<DraftOrderResDto> allDrafts = new ArrayList<>();
+
+        try (Cursor<byte[]> cursor = redisTemplate.getConnectionFactory()
+                .getConnection()
+                .scan(options)) {
+            while (cursor.hasNext()) {
+                String key = new String(cursor.next());
+                DraftOrderResDto dto = (DraftOrderResDto) redisTemplate.opsForValue().get(key);
+                if (dto != null) {
+                    allDrafts.add(dto);
+                }
+            }
+        }
+        return allDrafts;
     }
 
     public void updateInventoryInRedis(UUID storeId, List<InventoryRedis> inventoryRedisList) {
