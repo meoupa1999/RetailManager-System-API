@@ -31,14 +31,16 @@ public class Orders {
     private UUID id;
     private String shipAddress;
     private String shipPhone;
-    private Double totalPriceBeforeDiscount;
-    private Double totalPriceAfterDiscount;
-    private Double finalPrice;
+    private Long totalPriceBeforeDiscount;
+//    private Double totalPriceAfterDiscount;
+    private Long totalDiscountProduct;
+    private Long totalDiscountRank;
+    private Long finalPrice;
     @Enumerated(EnumType.STRING)
     private OrderType orderType;
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
-    private Integer pointEarned;
+//    private Integer pointEarned;
     private String description;
     @Enumerated(EnumType.STRING)
     private RankStatus rankApplied;
@@ -46,11 +48,18 @@ public class Orders {
     @Embedded
     private Audit audit = new Audit();
     @ManyToOne
-    @JoinColumn(
-            name = "customer_id"
-    )
+    @JoinColumn(name = "customer_id")
     private Account customer;
     @OneToMany(mappedBy = "order")
     private List<OrderDetail> orderDetailList = new ArrayList();
+
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
+
+    public void addStore(Store store) {
+        store.getOrdersList().add(this);
+        this.setStore(store);
+    }
 }
 

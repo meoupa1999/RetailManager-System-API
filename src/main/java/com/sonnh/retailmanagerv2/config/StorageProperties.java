@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Configuration
 public class StorageProperties{
-//    @Value("${azure.storage.connection-string}")
+    @Value("${azure.storage.connection-string}")
     private String connectionString;
-//    @Value("${azure.storage.container-name}")
+    @Value("${azure.storage.container-name}")
     private String containerName;
 }

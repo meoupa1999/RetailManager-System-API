@@ -17,18 +17,39 @@ import java.util.UUID;
 @Entity
 @EntityListeners({AuditingEntityListener.class})
 @Table(name = "order_detail")
-public class OrderDetail { @Id @GeneratedValue(generator = "UUID")
+public class OrderDetail {
+    @Id
+    @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(nullable = false, columnDefinition = "uniqueIdentifier")
     private UUID id;
-    private Integer quantity;
-    private Double unitPrice;
-    private Double originalPrice;
-    private Double discountPercent;
-    private Double totalPrice;
+    private Long quantity;
+    private Long unitPrice;
+    private Long originalPrice;
+    private Long discountAmount;
+    private Long totalPrice;
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Orders order;
+    //    @OneToMany( mappedBy = "orderDetail")
+//    private List<Guaranted> guarantedList = new ArrayList();
     @OneToMany(mappedBy = "orderDetail")
-    private List<Guaranted> guarantedList = new ArrayList();
+    private List<WarrantyCard> warrantyCardList = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private StoreInventory product;
+
+    @OneToOne(mappedBy = "orderDetail")
+    private Guaranted guaranted;
+    public void addProduct(StoreInventory product) {
+        product.getOrderDetailList().add(this);
+        this.setProduct(product);
+    }
+
+    public void addOrder(Orders order) {
+        order.getOrderDetailList().add(this);
+        this.setOrder(order);
+    }
+
 }

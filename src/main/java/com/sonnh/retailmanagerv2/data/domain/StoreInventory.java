@@ -6,11 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.query.Order;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -26,8 +25,10 @@ public class StoreInventory {
     private UUID id;
     private String productCode;
     private String name;
+    private Long price;
     private String brand;
     private String description;
+    private Integer guarantedDuration;
     @Embedded
     private Audit audit = new Audit();
     @OneToMany(mappedBy = "storeInventory")
@@ -35,18 +36,44 @@ public class StoreInventory {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-    @ManyToMany
-    @JoinTable(name = "storeinventory_promotion",
-            joinColumns = {@JoinColumn(name = "storeinventory_id")},
-            inverseJoinColumns = {@JoinColumn(name = "promotion_id")})
-    private List<Promotion> promotionList = new ArrayList();
+
     @OneToMany(mappedBy = "product")
-    private List<Guaranted> guarantedList = new ArrayList();
+    private List<OrderDetail> orderDetailList = new ArrayList();
+
+    //    @OneToMany(mappedBy = "product")
+//    private List<Guaranted> guarantedList = new ArrayList();
+//    @OneToOne(mappedBy = "product")
+//    private Guaranted guaranted;
+
+    @ManyToMany
+    @JoinTable(
+            name = "promotion_storeinventory",
+            joinColumns = @JoinColumn(name = "storeiventory_id"),
+            inverseJoinColumns = @JoinColumn(name = "promotion_id")
+    )
+    private Set<Promotion> promotionList = new HashSet<>();
 
     public void addCategory(Category category) {
         category.getStoreInventoryList().add(this);
         this.setCategory(category);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StoreInventory)) return false;
 
+        StoreInventory storeInventory = (StoreInventory) o;
+
+        if (this.id == null || storeInventory.id == null) {
+            return false;
+        }
+
+        return this.id.equals(storeInventory.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return (id == null) ? System.identityHashCode(this) : id.hashCode();
+    }
 }

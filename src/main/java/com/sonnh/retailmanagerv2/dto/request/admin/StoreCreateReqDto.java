@@ -18,7 +18,16 @@ public class StoreCreateReqDto implements Serializable {
     private String mail;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public StoreCreateReqDto(@JsonProperty("name") String name, @JsonProperty("address") String address, @JsonProperty("latitude") Double latitude, @JsonProperty("longitude") Double longitude, @JsonProperty("description") String description, @JsonProperty("province") String province, @JsonProperty("district") String district, @JsonProperty("ward") String ward, @JsonProperty("phone") String phone, @JsonProperty("mail") String mail) {
+    public StoreCreateReqDto(@JsonProperty("name") String name,
+                             @JsonProperty("address") String address,
+                             @JsonProperty("latitude") Double latitude,
+                             @JsonProperty("longitude") Double longitude,
+                             @JsonProperty("description") String description,
+                             @JsonProperty("province") String province,
+                             @JsonProperty("district") String district,
+                             @JsonProperty("ward") String ward,
+                             @JsonProperty("phone") String phone,
+                             @JsonProperty("mail") String mail) {
         this.name = name;
         this.address = address;
         this.latitude = latitude;

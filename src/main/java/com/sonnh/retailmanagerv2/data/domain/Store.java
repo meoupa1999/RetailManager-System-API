@@ -43,8 +43,13 @@ public class Store {
     @OneToMany(mappedBy = "store")
     private List<StoreImport> storeImportList = new ArrayList();
 
-    @OneToMany
+    @OneToMany(mappedBy = "store")
     private List<ImportStoreSummary> importStoreSummaryList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "store")
+    private List<Account> empoyeeAccountList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "store")
+    private List<Orders> ordersList = new ArrayList<>();
 
 }
